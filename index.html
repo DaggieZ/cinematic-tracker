@@ -141,36 +141,80 @@
         #hub-view { display: none; }
         #hub-view.visible { display: block; }
 
-        .hub-overall-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .hub-stat-card {
+        /* Hub overall stats — single wide card with ring */
+        .hub-overall-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px 24px;
-            text-align: center;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: auto 1fr 1fr 1fr;
+            gap: 0;
+            position: relative;
         }
 
-        .hub-stat-val {
+        .hub-overall-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 0% 50%, rgba(var(--accent-rgb), 0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hub-ring-box {
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-right: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hub-overall-stat {
+            text-align: center;
+            padding: 24px 16px;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hub-overall-stat:first-child { border-left: none; }
+
+        .hub-overall-val {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 28px;
             letter-spacing: 1px;
-            color: var(--accent-color);
+            color: #fff;
             line-height: 1;
-            margin-bottom: 6px;
         }
 
-        .hub-stat-lbl {
+        .hub-overall-lbl {
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
+        }
+
+        /* Hub franchise card progress bar */
+        .hfc-progress-bar-wrap {
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hfc-progress-bar-fill {
+            height: 100%;
+            border-radius: 0 2px 2px 0;
+            transition: width 1s cubic-bezier(0.4,0,0.2,1);
         }
 
         .hub-franchise-grid {
@@ -898,6 +942,8 @@
         }
         .scroll-btn:hover { border-color: var(--accent-color); color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 0 12px rgba(var(--accent-rgb),0.2); }
         .scroll-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .scroll-btn-unwatched { border-color: rgba(var(--accent-rgb), 0.3); color: var(--accent-color); }
+        .scroll-btn-unwatched:hover { background: rgba(var(--accent-rgb), 0.1); }
 
         /* ============================================================
            CONFIRM POPUP
@@ -953,6 +999,8 @@
         @media (max-width: 900px) {
             .dashboard { grid-template-columns: 1fr 1fr; }
             .stat-ring-box { grid-column: span 2; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .hub-overall-card { grid-template-columns: 1fr 1fr; }
+            .hub-ring-box { grid-column: span 2; border-right: none; border-bottom: 1px solid var(--border-color); }
         }
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 15px; text-align: center; }
@@ -969,6 +1017,8 @@
             .stat-ring-box { grid-column: span 2; }
             .hub-franchise-grid { grid-template-columns: 1fr; }
             .filter-rows { flex-direction: column; gap: 16px; }
+            .hub-overall-card { grid-template-columns: 1fr 1fr; }
+            .hub-ring-box { grid-column: span 2; border-right: none; border-bottom: 1px solid var(--border-color); }
         }
     </style>
 </head>
@@ -991,7 +1041,7 @@
     </header>
 
     <div id="hub-view" class="visible">
-        <div class="hub-overall-stats" id="hub-overall-stats"></div>
+        <div id="hub-overall-stats"></div>
         <div class="hub-franchise-grid" id="hub-franchise-grid"></div>
     </div>
 
@@ -1082,6 +1132,12 @@
     <div class="scroll-btns">
         <button class="scroll-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="To Top">
             <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <button class="scroll-btn scroll-btn-unwatched" id="btn-jump-unwatched" onclick="jumpToFirstUnwatched()" title="Jump to First Unwatched" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="10 8 16 12 10 16"/>
+            </svg>
         </button>
         <button class="scroll-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="To Bottom">
             <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1226,6 +1282,7 @@
             document.getElementById('hub-view').classList.add('visible');
             document.getElementById('franchise-view').classList.remove('visible');
             document.getElementById('btn-clear-watched').style.display = 'none';
+            document.getElementById('btn-jump-unwatched').style.display = 'none';
             renderHub();
         }
 
@@ -1247,6 +1304,7 @@
             document.getElementById('hub-view').classList.remove('visible');
             document.getElementById('franchise-view').classList.add('visible');
             document.getElementById('btn-clear-watched').style.display = '';
+            document.getElementById('btn-jump-unwatched').style.display = '';
 
             // Build format filter chips from this franchise's data
             buildFormatChips(franchise);
@@ -1427,7 +1485,12 @@
         function updateStats() {
             const today = new Date();
             let filtered = allMovies.filter(m => m.franchise === currentFranchise);
-            filtered = filtered.filter(m => activeCanonTypes.has(m.continuity_status || 'main'));
+            // Only filter by continuity when the user has actually deselected something.
+            // When all three are on, skip the filter and show everything — this handles
+            // any entries with unexpected/legacy continuity_status values in the database.
+            if (activeCanonTypes.size < 3) {
+                filtered = filtered.filter(m => activeCanonTypes.has(normaliseStatus(m.continuity_status)));
+            }
             
             let totalMinutes = 0, watchedMinutes = 0;
             filtered.forEach(m => {
@@ -1488,12 +1551,34 @@
             return `${d}d ${h}h ${min}m`;
         }
 
+        // Smarter formatter — hides leading zero segments for hub display
+        function formatDurationSmart(minutes) {
+            if (!minutes || minutes === 0) return '—';
+            const d   = Math.floor(minutes / 1440);
+            const h   = Math.floor((minutes % 1440) / 60);
+            const min = minutes % 60;
+            if (d > 0) return `${d}d ${h}h ${min}m`;
+            if (h > 0) return `${h}h ${min}m`;
+            return `${min}m`;
+        }
+
         function formatRuntime(minutes) {
             if (!minutes || minutes <= 0) return 'TBD';
             const h   = Math.floor(minutes / 60);
             const min = minutes % 60;
             if (h === 0) return `${min}m`;
             return `${h}h ${min.toString().padStart(2, '0')}m`;
+        }
+
+        function jumpToFirstUnwatched() {
+            const firstUnwatched = document.querySelector('#movie-grid .card:not(.is-watched)');
+            if (firstUnwatched) {
+                firstUnwatched.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Brief highlight pulse
+                firstUnwatched.style.transition = 'box-shadow 0.3s ease';
+                firstUnwatched.style.boxShadow  = `0 0 0 2px var(--accent-color), 0 0 24px rgba(var(--accent-rgb), 0.4)`;
+                setTimeout(() => { firstUnwatched.style.boxShadow = ''; }, 1200);
+            }
         }
 
         function animateCounter(el, targetText, duration = 900) {
@@ -1529,6 +1614,19 @@
                 if (p < 1) requestAnimationFrame(step);
             }
             requestAnimationFrame(step);
+        }
+
+        // Normalise continuity_status to one of the three known values.
+        // Anything unrecognised (old data, typos, nulls) falls through to 'main'
+        // so entries are never silently dropped by the filter.
+        const KNOWN_STATUSES = new Set(['main', 'multiverse', 'non-canon']);
+        function normaliseStatus(raw) {
+            if (!raw) return 'main';
+            const lower = raw.toLowerCase().trim();
+            if (lower === 'non-canon' || lower === 'noncanon' || lower === 'non_canon') return 'non-canon';
+            if (lower === 'multiverse') return 'multiverse';
+            if (KNOWN_STATUSES.has(lower)) return lower;
+            return 'main'; // catch-all for anything unexpected
         }
 
         function parseComplexEpisodicTitle(fullTitle, isMovie = false) {
@@ -1568,49 +1666,76 @@
         ============================================================ */
         function renderHub() {
             const franchises = ['Marvel', 'DCU', 'Star Wars'];
-            const today = new Date();
+            const today      = new Date();
 
-            const allReleased = allMovies.filter(m => new Date(m.release_date) <= today);
-            const allTotal    = allReleased.reduce((s, m) => s + (m.runtime || 0), 0);
-            const allWatched  = allReleased.filter(m => m.watched).reduce((s, m) => s + (m.runtime || 0), 0);
-            const allPct      = allTotal > 0 ? ((allWatched / allTotal) * 100).toFixed(1) : '0.0';
-            
+            // Overall stats
+            const allReleased    = allMovies.filter(m => new Date(m.release_date) <= today);
+            const allTotal       = allReleased.reduce((s, m) => s + (m.runtime || 0), 0);
+            const allWatched     = allReleased.filter(m => m.watched).reduce((s, m) => s + (m.runtime || 0), 0);
+            const allWatchedCnt  = allReleased.filter(m => m.watched).length;
+            const allPct         = allTotal > 0 ? parseFloat(((allWatched / allTotal) * 100).toFixed(1)) : 0;
+            const overallCirc    = 2 * Math.PI * 36;
+            const overallOffset  = overallCirc - (allPct / 100) * overallCirc;
+
             document.getElementById('hub-overall-stats').innerHTML = `
-                <div class="hub-stat-card">
-                    <div class="hub-stat-val">${allPct}%</div>
-                    <div class="hub-stat-lbl">Overall Complete</div>
-                </div>
-                <div class="hub-stat-card">
-                    <div class="hub-stat-val">${allReleased.filter(m => m.watched).length} / ${allReleased.length}</div>
-                    <div class="hub-stat-lbl">Items Watched</div>
-                </div>
-                <div class="hub-stat-card">
-                    <div class="hub-stat-val">${formatMinutes(allWatched)}</div>
-                    <div class="hub-stat-lbl">Time Spent Watching</div>
-                </div>
-                <div class="hub-stat-card">
-                    <div class="hub-stat-val">${formatMinutes(allTotal - allWatched)}</div>
-                    <div class="hub-stat-lbl">Time Remaining</div>
+                <div class="hub-overall-card">
+                    <div class="hub-ring-box">
+                        <div class="ring-wrapper">
+                            <svg class="ring-svg" viewBox="0 0 88 88">
+                                <circle class="ring-track"    cx="44" cy="44" r="36"/>
+                                <circle class="ring-progress" cx="44" cy="44" r="36"
+                                    style="stroke-dasharray:${overallCirc};stroke-dashoffset:${overallOffset}"/>
+                            </svg>
+                            <div class="ring-center-text">
+                                <span class="ring-percent">${allPct.toFixed(1)}%</span>
+                                <span class="ring-label-inline">DONE</span>
+                            </div>
+                        </div>
+                        <div class="ring-side-info">
+                            <div class="ring-title">ALL FRANCHISES</div>
+                            <div class="ring-subtitle">OVERALL COMPLETION</div>
+                        </div>
+                    </div>
+                    <div class="hub-overall-stat">
+                        <div class="hub-overall-val">${allWatchedCnt} / ${allReleased.length}</div>
+                        <div class="hub-overall-lbl">Items Watched</div>
+                    </div>
+                    <div class="hub-overall-stat">
+                        <div class="hub-overall-val">${formatDurationSmart(allWatched)}</div>
+                        <div class="hub-overall-lbl">Time Spent Watching</div>
+                    </div>
+                    <div class="hub-overall-stat">
+                        <div class="hub-overall-val" style="color:var(--accent-color);">${formatDurationSmart(allTotal - allWatched)}</div>
+                        <div class="hub-overall-lbl">Time Remaining</div>
+                    </div>
                 </div>
             `;
-            
+
+            // Franchise cards
             const parts = franchises.map(f => {
-                const t    = franchiseThemes[f];
-                const s    = getFranchiseStats(f);
-                const circ = 188.5;
+                const t      = franchiseThemes[f];
+                const s      = getFranchiseStats(f);
+                const circ   = 188.5;
                 const offset = circ - (s.pct / 100) * circ;
 
                 return `
                 <div class="hub-franchise-card" style="--hfc-rgb:${t.rgb}" onclick="setFranchise('${f}')">
-                    <div class="hfc-accent-bar"></div>
+                    <!-- Progress bar replaces static accent bar -->
+                    <div class="hfc-progress-bar-wrap">
+                        <div class="hfc-progress-bar-fill"
+                             style="width:${s.pct}%; background:linear-gradient(90deg, rgb(${t.rgb}), rgba(${t.rgb},0.5));"></div>
+                    </div>
                     <div class="hfc-body">
                         <div class="hfc-top">
-                            <div class="hfc-title">${f.toUpperCase()}</div>
+                            <div>
+                                <div class="hfc-title">${f.toUpperCase()}</div>
+                                <div style="font-size:11px;color:rgba(${t.rgb},0.7);font-weight:600;letter-spacing:1px;margin-top:2px;">${s.pct}% COMPLETE</div>
+                            </div>
                             <div class="hfc-ring-wrapper">
                                 <svg class="hfc-ring-svg" viewBox="0 0 72 72">
                                     <circle class="hfc-ring-track"    cx="36" cy="36" r="30"/>
                                     <circle class="hfc-ring-progress" cx="36" cy="36" r="30"
-                                    style="stroke:rgb(${t.rgb});stroke-dashoffset:${offset}"/>
+                                        style="stroke:rgb(${t.rgb});stroke-dashoffset:${offset}"/>
                                 </svg>
                                 <div class="hfc-ring-center">
                                     <span class="hfc-ring-pct">${s.pct}%</span>
@@ -1624,11 +1749,11 @@
                                 <div class="hfc-mini-lbl">Watched</div>
                             </div>
                             <div class="hfc-mini-stat">
-                                <div class="hfc-mini-val">${formatMinutes(s.watched)}</div>
+                                <div class="hfc-mini-val">${formatDurationSmart(s.watched)}</div>
                                 <div class="hfc-mini-lbl">Time In</div>
                             </div>
                             <div class="hfc-mini-stat">
-                                <div class="hfc-mini-val">${formatMinutes(s.remaining)}</div>
+                                <div class="hfc-mini-val">${formatDurationSmart(s.remaining)}</div>
                                 <div class="hfc-mini-lbl">Remaining</div>
                             </div>
                         </div>
@@ -1652,8 +1777,9 @@
             const today = new Date();
 
             let filtered = allMovies.filter(m => m.franchise === currentFranchise);
-            
-            filtered = filtered.filter(m => activeCanonTypes.has(m.continuity_status || 'main'));
+            if (activeCanonTypes.size < 3) {
+                filtered = filtered.filter(m => activeCanonTypes.has(normaliseStatus(m.continuity_status)));
+            }
             
             if (searchQuery) {
                 filtered = filtered.filter(m =>
@@ -1669,20 +1795,11 @@
             if (watchedFilter === 'watched')   filtered = filtered.filter(m => m.watched);
             if (watchedFilter === 'unwatched') filtered = filtered.filter(m => !m.watched);
 
-            let displayList = filtered.filter(m => {
-                const rd = new Date(m.release_date);
-                // Dates >= year 2050 are placeholder dates (e.g. 2099-01-01) for
-                // real content with no announced date. They should appear in
-                // Chrono/Release views (as locked cards) but NOT in Upcoming,
-                // which is reserved for genuinely announced future releases.
-                const isPlaceholder = rd.getFullYear() >= 2050;
-                if (currentView === 'Upcoming') {
-                    return rd > today && !isPlaceholder;
-                }
-                // Chrono + Release: show everything — released, genuinely upcoming
-                // (locked), and placeholder-dated content all belong in the main list
-                return true;
-            });
+         let displayList = filtered.filter(m => {
+    const rd = new Date(m.release_date);
+    // Strict separation: Upcoming gets future dates, the others get past dates
+    return currentView === 'Upcoming' ? rd > today : rd <= today;
+});
             
             if (currentView === 'Chronological') {
                 displayList.sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
@@ -1693,7 +1810,7 @@
             const parts = displayList.map((movie, i) => {
                 const releaseDate   = new Date(movie.release_date);
                 const isUpcoming    = releaseDate > today;
-                const status        = movie.continuity_status || 'main';
+                const status        = normaliseStatus(movie.continuity_status);
                 const isMovie       = movie.format === 'Movie';
                 const parsed        = parseComplexEpisodicTitle(movie.title, isMovie);
                 const formattedDate = releaseDate.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
@@ -1751,10 +1868,35 @@
            DATA FETCH
         ============================================================ */
         async function fetchAllMovies() {
-            const { data, error } = await supabaseClient.from('movies').select('*');
-            if (error) { console.error('Fetch error:', error); return; }
-            allMovies = data || [];
+    let allData = [];
+    let from = 0;
+    let to = 999;
+    let hasMore = true;
+
+    // Loop to fetch chunks of 1000 to bypass Supabase limits
+    while (hasMore) {
+        const { data, error } = await supabaseClient
+            .from('movies')
+            .select('*')
+            .range(from, to);
+
+        if (error) { 
+            console.error('Fetch error:', error); 
+            return; 
         }
+
+        allData = allData.concat(data);
+        
+        // If we got back fewer than 1000 rows, we are at the end
+        if (data.length < 1000) {
+            hasMore = false;
+        } else {
+            from += 1000;
+            to += 1000;
+        }
+    }
+    allMovies = allData;
+}
 
         /* ============================================================
            INIT
