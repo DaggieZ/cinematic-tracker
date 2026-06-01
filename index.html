@@ -1671,7 +1671,17 @@
 
             let displayList = filtered.filter(m => {
                 const rd = new Date(m.release_date);
-                return currentView === 'Upcoming' ? rd > today : rd <= today;
+                // Dates >= year 2050 are placeholder dates (e.g. 2099-01-01) for
+                // real content with no announced date. They should appear in
+                // Chrono/Release views (as locked cards) but NOT in Upcoming,
+                // which is reserved for genuinely announced future releases.
+                const isPlaceholder = rd.getFullYear() >= 2050;
+                if (currentView === 'Upcoming') {
+                    return rd > today && !isPlaceholder;
+                }
+                // Chrono + Release: show everything — released, genuinely upcoming
+                // (locked), and placeholder-dated content all belong in the main list
+                return true;
             });
             
             if (currentView === 'Chronological') {
