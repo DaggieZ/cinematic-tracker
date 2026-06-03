@@ -25,6 +25,7 @@
         body.theme-marvel   { --accent-color: #E21217; --accent-rgb: 226,18,23; }
         body.theme-dcu      { --accent-color: #0074f0; --accent-rgb: 0,116,240; }
         body.theme-starwars { --accent-color: #FFE81F; --accent-rgb: 255,232,31; }
+        body.theme-theboys  { --accent-color: #f97316; --accent-rgb: 249,115,22; }
         body.theme-home     { --accent-color: #00f5d4; --accent-rgb: 0,245,212; }
 
         /* ============================================================
@@ -1035,9 +1036,10 @@
         <div class="header-controls">
             <div class="franchise-nav">
                 <button class="nav-btn active" id="nav-Home"     onclick="goHome()">HOME</button>
-                <button class="nav-btn"         id="nav-Marvel" onclick="setFranchise('Marvel')">MARVEL</button>
+                <button class="nav-btn"         id="nav-Marvel"   onclick="setFranchise('Marvel')">MARVEL</button>
                 <button class="nav-btn"         id="nav-DCU"      onclick="setFranchise('DCU')">DCU</button>
                 <button class="nav-btn"         id="nav-StarWars" onclick="setFranchise('Star Wars')">STAR WARS</button>
+                <button class="nav-btn"         id="nav-TheBoys"  onclick="setFranchise('The Boys')">THE BOYS</button>
             </div>
             <div class="header-right-btns">
                 <button class="btn-clear-watched" id="btn-clear-watched" onclick="promptClearWatched()" style="display:none;">CLEAR WATCHED</button>
@@ -1176,6 +1178,7 @@
                             <option value="Marvel">Marvel</option>
                             <option value="DCU">DCU</option>
                             <option value="Star Wars">Star Wars</option>
+                            <option value="The Boys">The Boys</option>
                         </select>
                     </div>
                     <div class="form-group" style="flex:1;">
@@ -1266,14 +1269,16 @@
         let watchedFilter     = 'all'; // 'all' | 'watched' | 'unwatched'
 
         const franchiseWatermarks = {
-            Marvel:     'https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg',
-            DCU:        'https://upload.wikimedia.org/wikipedia/commons/3/3d/DC_Comics_logo.svg',
-            'Star Wars':'https://upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg',
+            Marvel:      'https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg',
+            DCU:         'https://upload.wikimedia.org/wikipedia/commons/3/3d/DC_Comics_logo.svg',
+            'Star Wars': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg',
+            'The Boys':  '',
         };
         const franchiseThemes = {
-            Marvel:     { rgb: '226,18,23',   theme: 'theme-marvel' },
-            DCU:        { rgb: '0,116,240',   theme: 'theme-dcu' },
-            'Star Wars':{ rgb: '255,232,31',  theme: 'theme-starwars' },
+            Marvel:      { rgb: '226,18,23',  theme: 'theme-marvel' },
+            DCU:         { rgb: '0,116,240',  theme: 'theme-dcu' },
+            'Star Wars': { rgb: '255,232,31', theme: 'theme-starwars' },
+            'The Boys':  { rgb: '249,115,22', theme: 'theme-theboys' },
         };
 
         /* ============================================================
@@ -1671,7 +1676,7 @@
            RENDER HUB
         ============================================================ */
         function renderHub() {
-            const franchises = ['Marvel', 'DCU', 'Star Wars'];
+            const franchises = ['Marvel', 'DCU', 'Star Wars', 'The Boys'];
             const today      = new Date();
 
             // Overall stats
