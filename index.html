@@ -736,11 +736,26 @@
            CARD GRID
         ============================================================ */
         .grid-container {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 24px;
-        }
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+@media (max-width: 1200px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+@media (min-width: 2560px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+}
 
         @keyframes cardReveal {
             from { opacity: 0; transform: translateY(20px); }
