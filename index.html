@@ -732,32 +732,35 @@
         .filter-reset:hover { color: #ef4444; }
 
         /* ============================================================
-           CARD GRID (UPDATED)
-        ============================================================ */
-        .grid-container {
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            max-width: 2200px;
-            margin: 0 auto;
-        }
+   CARD GRID
+============================================================ */
+.grid-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
 
-        @media (max-width: 1200px) {
-            .grid-container {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
+    max-width: 2200px;
+    margin: 0 auto;
+}
 
-        @media (max-width: 768px) {
-            .grid-container {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-        }
+@media (max-width: 1200px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
 
-        @media (min-width: 2560px) {
-            .grid-container {
-                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            }
-        }
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}
 
+@media (min-width: 2560px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    }
+}
         @keyframes cardReveal {
             from { opacity: 0; transform: translateY(20px); }
             to   { opacity: 1; transform: translateY(0); }
