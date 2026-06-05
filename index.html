@@ -730,16 +730,15 @@
         }
         .filter-reset:hover { color: #ef4444; }
 
-        /* ============================================================
-   CARD GRID (UPDATED)
+/* ============================================================
+   CARD GRID
 ============================================================ */
 .grid-container {
-    /* Lowered default from 280px to 240px so your laptop fits an extra column 
-       instead of blowing up 3-4 columns too wide */
+    width: 100%;
+    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    
-    /* OPTIONAL: Caps how far across an ultra-wide screen your content expands 
-       so you don't get neck strain looking from left to right */
+    gap: 24px;
+
     max-width: 2200px;
     margin: 0 auto;
 }
@@ -752,20 +751,15 @@
 
 @media (max-width: 768px) {
     .grid-container {
-        /* Lowered from 160px to 140px so mobile devices display 
-           compact, perfectly proportioned grids instead of giant cards */
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
 }
 
 @media (min-width: 2560px) {
     .grid-container {
-        /* Increased from 320px to 400px. On a 3440px screen, this will target 
-           fewer columns (~8 columns) but make each individual card much larger and easier to see */
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     }
-}
-        @keyframes cardReveal {
+}        @keyframes cardReveal {
             from { opacity: 0; transform: translateY(20px); }
             to   { opacity: 1; transform: translateY(0); }
         }
