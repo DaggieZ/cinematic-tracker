@@ -62,21 +62,19 @@
            HEADER
         ============================================================ */
         header {
-    background-color: var(--bg-card);
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 -24px 24px -24px;
-
-    position: sticky;
-    top: 0;
-    z-index: 999;
-
-    backdrop-filter: blur(16px);
-    background: rgba(18,18,21,0.88);
-}
+            background-color: var(--bg-card);
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 -24px 24px -24px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            backdrop-filter: blur(16px);
+            background: rgba(18,18,21,0.88);
+        }
         h1 {
             margin: 0;
             font-family: 'Bebas Neue', sans-serif;
@@ -115,7 +113,7 @@
 
         .header-right-btns { display: flex; gap: 8px; align-items: center; }
 
-        .btn-clear-watched {
+        .btn-clear-watched, .btn-trophy {
             background: transparent;
             color: var(--text-muted);
             border: 1px solid var(--border-color);
@@ -128,6 +126,9 @@
             transition: all 0.2s ease;
         }
         .btn-clear-watched:hover { border-color: #ef4444; color: #ef4444; }
+        
+        .btn-trophy { border-color: var(--accent-color); color: var(--accent-color); }
+        .btn-trophy:hover { background: rgba(var(--accent-rgb), 0.1); }
 
         .btn-add-item {
             background-color: #10b981;
@@ -149,7 +150,6 @@
         #hub-view { display: none; }
         #hub-view.visible { display: block; }
 
-        /* Hub overall stats — single wide card with ring */
         .hub-overall-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -211,7 +211,6 @@
             font-weight: 600;
         }
 
-        /* Hub franchise card progress bar */
         .hfc-progress-bar-wrap {
             height: 4px;
             background: rgba(255,255,255,0.05);
@@ -273,7 +272,6 @@
             line-height: 1;
         }
 
-        /* Mini ring inside hub card */
         .hfc-ring-wrapper {
             position: relative;
             width: 72px;
@@ -476,19 +474,17 @@
         #franchise-view { display: none; }
         #franchise-view.visible { display: block; }
 
-        /* Stats dashboard */
-        /* Stats dashboard */
         .dashboard {
-    display: grid;
-    grid-template-columns: auto 1fr 1fr 1fr;
-    gap: 0;
-    background-color: var(--bg-card);
-    margin-bottom: 24px;
-    border-radius: 14px;
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-    position: relative;
-}
+            display: grid;
+            grid-template-columns: auto 1fr 1fr 1fr;
+            gap: 0;
+            background-color: var(--bg-card);
+            margin-bottom: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
         .dashboard::before {
             content: '';
             position: absolute;
@@ -827,7 +823,7 @@
         }
         .filter-reset:hover { color: #ef4444; }
 
-        /* Vault toggle — distinct from regular filter chips */
+        /* Vault toggle */
         .vault-toggle-row {
             display: flex;
             align-items: center;
@@ -1021,7 +1017,8 @@
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center;
+            justify-content: center;
             transition: all 0.2s ease;
         }
         .card-action-btn svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; }
@@ -1164,6 +1161,7 @@
             z-index: 1000; justify-content: center; align-items: center;
             padding: 20px; overflow-y: auto;
         }
+        .modal-overlay.active { display: flex; }
         .modal-content {
             background: rgba(18,18,21,0.85);
             backdrop-filter: blur(20px);
@@ -1178,7 +1176,41 @@
         .form-input:focus, .form-select:focus { outline: none; border-color: var(--accent-color); }
         .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
         .btn-submit { background: var(--accent-color); color: #0a0a0c; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1px; }
-        .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1px; }
+        .btn-cancel, .close-btn { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1px; }
+        .close-btn { border: none; font-size: 20px; padding: 5px 10px; }
+
+        /* ============================================================
+           ACHIEVEMENT / TROPHY SYSTEM CSS
+        ============================================================ */
+        .toast-container {
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: rgba(15, 15, 20, 0.95); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent-color); border-radius: 8px;
+            padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateX(120%);
+            animation: slideIn 0.5s forwards, slideOut 0.5s 4s forwards;
+            width: 320px;
+        }
+        @keyframes slideIn { to { transform: translateX(0); } }
+        @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
+        
+        .toast-icon { font-size: 32px; }
+        .toast-text h4 { margin: 0; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 18px; color: #fff; }
+        .toast-text p { margin: 4px 0 0; font-size: 12px; color: var(--text-muted); }
+
+        .trophy-list { display: flex; flex-direction: column; gap: 12px; }
+        .trophy-item {
+            display: flex; gap: 16px; padding: 16px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color); border-radius: 12px; align-items: center;
+            transition: all 0.3s ease; filter: grayscale(100%); opacity: 0.5;
+        }
+        .trophy-item.unlocked { filter: grayscale(0%); opacity: 1; border-color: rgba(var(--accent-rgb), 0.4); background: rgba(var(--accent-rgb), 0.05); }
+        .trophy-icon-lg { font-size: 40px; background: rgba(0,0,0,0.5); border-radius: 50%; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+        .trophy-details h4 { margin: 0; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; color: #fff; }
+        .trophy-details p { margin: 4px 0 0; font-size: 13px; color: var(--text-muted); }
 
         /* ============================================================
            RESPONSIVE
@@ -1195,7 +1227,7 @@
             .franchise-nav { width: 100%; justify-content: space-between; }
             .nav-btn { flex: 1; padding: 8px 4px; font-size: 13px; }
             .header-right-btns { width: 100%; }
-            .btn-add-item, .btn-clear-watched { flex: 1; text-align: center; }
+            .btn-add-item, .btn-clear-watched, .btn-trophy { flex: 1; text-align: center; }
             .filter-row-top { flex-direction: column; }
             .grid-container { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
             .card-content { padding: 12px; gap: 8px; }
@@ -1216,14 +1248,15 @@
         <div class="header-controls">
             <div class="franchise-nav">
                 <button class="nav-btn active" id="nav-Home"       onclick="goHome()">HOME</button>
-                <button class="nav-btn"         id="nav-Marvel"     onclick="setFranchise('Marvel')">MARVEL</button>
-                <button class="nav-btn"         id="nav-DCU"        onclick="setFranchise('DCU')">DCU</button>
-                <button class="nav-btn"         id="nav-StarWars"   onclick="setFranchise('Star Wars')">STAR WARS</button>
-                <button class="nav-btn"         id="nav-TheBoys"    onclick="setFranchise('The Boys')">THE BOYS</button>
-                <button class="nav-btn"         id="nav-Arrowverse" onclick="setFranchise('Arrowverse')">ARROWVERSE</button>
+                <button class="nav-btn"        id="nav-Marvel"     onclick="setFranchise('Marvel')">MARVEL</button>
+                <button class="nav-btn"        id="nav-DCU"        onclick="setFranchise('DCU')">DCU</button>
+                <button class="nav-btn"        id="nav-StarWars"   onclick="setFranchise('Star Wars')">STAR WARS</button>
+                <button class="nav-btn"        id="nav-TheBoys"    onclick="setFranchise('The Boys')">THE BOYS</button>
+                <button class="nav-btn"        id="nav-Arrowverse" onclick="setFranchise('Arrowverse')">ARROWVERSE</button>
             </div>
             <div class="header-right-btns">
                 <button class="btn-clear-watched" id="btn-clear-watched" onclick="promptClearWatched()" style="display:none;">CLEAR WATCHED</button>
+                <button class="btn-trophy" onclick="openTrophyRoom()">🏆 TROPHIES</button>
                 <button class="btn-add-item" onclick="openModal()">+ ADD ITEM</button>
             </div>
         </div>
@@ -1236,7 +1269,6 @@
     </div>
 
     <div id="franchise-view">
-
         <div class="dashboard" id="dashboard">
             <div class="stat-ring-box">
                 <div class="ring-wrapper">
@@ -1271,9 +1303,7 @@
         <div class="controls-row">
             <div class="filter-row-top">
                 <div class="search-bar-container">
-                    <input type="text" id="dashboard-search" class="search-input"
-                        placeholder="Search title, chapter, or network..."
-                        oninput="handleSearchInput(this.value)">
+                    <input type="text" id="dashboard-search" class="search-input" placeholder="Search title, chapter, or network..." oninput="handleSearchInput(this.value)">
                 </div>
                 <div class="toggle-pill">
                     <button class="toggle-btn active" id="btn-chrono"   onclick="setView('Chronological')">Chronological</button>
@@ -1323,7 +1353,6 @@
                 </div>
             </div>
 
-            <!-- Vault toggle — separate row, opt-in -->
             <div class="vault-toggle-row" id="vault-toggle-row" onclick="toggleVault()">
                 <div class="vault-toggle-label">
                     <span class="vault-toggle-title">⚿ THE VAULT</span>
@@ -1356,6 +1385,19 @@
         <div class="confirm-popup-btns">
             <button class="btn-confirm-yes" onclick="confirmYes()">YES</button>
             <button class="btn-confirm-no"  onclick="dismissClearPopup()">CANCEL</button>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="modal-overlay" id="trophy-modal">
+        <div class="modal-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;">
+                <h2 class="modal-title">🏆 TROPHY ROOM</h2>
+                <button class="close-btn" onclick="closeTrophyRoom()">&times;</button>
+            </div>
+            <div class="trophy-list" id="trophy-list">
+                </div>
         </div>
     </div>
 
@@ -1456,28 +1498,38 @@
            SUPABASE
         ============================================================ */
         const SUPABASE_URL      = "https://wagyonbawtmcmhrqpmxi.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhZ3lvbmJhd3RtY21ocnFwbXhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjYwMDYsImV4cCI6MjA5NTMwMjAwNn0.hdmWhk7H6G85VGq0IyTY7oEFNqp4gvWxn3nGyrO1TxQ"; // NOTE: your real key was hidden when you shared the file — paste it back here
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhZ3lvbmJhd3RtY21ocnFwbXhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjYwMDYsImV4cCI6MjA5NTMwMjAwNn0.hdmWhk7H6G85VGq0IyTY7oEFNqp4gvWxn3nGyrO1TxQ"; 
         const supabaseClient    = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         /* ============================================================
-           STATE
+           STATE & ACHIEVEMENTS
         ============================================================ */
         let allMovies         = [];
-        let currentMode       = 'hub';      // 'hub' | 'franchise'
+        let currentMode       = 'hub';      
         let currentFranchise  = 'Marvel';
         let currentView       = 'Chronological';
         let searchQuery       = '';
         let searchDebounceTimer = null;
         let filterPanelOpen   = false;
-        let vaultVisible      = false; // Vault content hidden by default
-        let currentSort       = 'default'; // secondary sort applied on top of the view order
-        let editingId         = null;      // id of the item currently being edited (null = add mode)
-        let pendingConfirm    = null;      // callback run when the confirm popup is accepted
+        let vaultVisible      = false;
+        let currentSort       = 'default';
+        let editingId         = null;
+        let pendingConfirm    = null;
 
-        // Filter state — multi-select continuity
-        let activeCanonTypes  = new Set(['main', 'multiverse', 'non-canon']); // all on by default
-        let activeFormats     = new Set(); // empty = show all formats
-        let watchedFilter     = 'all'; // 'all' | 'watched' | 'unwatched'
+        let activeCanonTypes  = new Set(['main', 'multiverse', 'non-canon']);
+        let activeFormats     = new Set();
+        let watchedFilter     = 'all';
+
+        // TROPHY STATE
+        let unlockedTrophies = JSON.parse(localStorage.getItem('unlockedTrophies')) || [];
+
+        const achievements = [
+            { id: 'first_blood', title: 'First Blood', desc: 'Watch your very first movie or episode.', icon: '🍿', requirement: (movies) => movies.some(m => m.watched) },
+            { id: 'getting_started', title: 'Cinephile', desc: 'Watch 5 items tværs over ethvert univers.', icon: '🎬', requirement: (movies) => movies.filter(m => m.watched).length >= 5 },
+            { id: 'marvel_fan', title: 'Avenger Assembled', desc: 'Watch your first Marvel item.', icon: '🛡️', requirement: (movies) => movies.some(m => m.franchise === 'Marvel' && m.watched) },
+            { id: 'multiverse_explorer', title: 'Multiverse Explorer', desc: 'Watch a Multiverse or Non-Canon item.', icon: '🌌', requirement: (movies) => movies.some(m => (m.continuity_status === 'multiverse' || m.continuity_status === 'non-canon') && m.watched) },
+            { id: 'hundred_club', title: 'The 100 Club', desc: 'Watch 100 items.', icon: '💯', requirement: (movies) => movies.filter(m => m.watched).length >= 100 }
+        ];
 
         const franchiseWatermarks = {
             Marvel:      'https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg',
@@ -1530,13 +1582,12 @@
             document.getElementById('btn-clear-watched').style.display = '';
             document.getElementById('btn-jump-unwatched').style.display = '';
 
-            // Build format filter chips from this franchise's data
             buildFormatChips(franchise);
             renderFranchise();
         }
 
         /* ============================================================
-           VIEW CONTROLS
+           VIEW CONTROLS & FILTERS
         ============================================================ */
         function setView(view) {
             currentView = view;
@@ -1561,9 +1612,6 @@
             }, 200);
         }
 
-        /* ============================================================
-           FILTER PANEL
-        ============================================================ */
         function toggleFilterPanel() {
             filterPanelOpen = !filterPanelOpen;
             document.getElementById('filter-panel').classList.toggle('open', filterPanelOpen);
@@ -1572,12 +1620,10 @@
 
         function toggleContinuity(type) {
             if (activeCanonTypes.has(type)) {
-                // Prevent deselecting all
                 if (activeCanonTypes.size > 1) activeCanonTypes.delete(type);
             } else {
                 activeCanonTypes.add(type);
             }
-            // Sync button states
             document.querySelectorAll('.continuity-toggle').forEach(btn => {
                 const t = btn.dataset.type;
                 btn.classList.toggle('on', activeCanonTypes.has(t));
@@ -1631,7 +1677,6 @@
             activeFormats    = new Set();
             watchedFilter    = 'all';
             vaultVisible     = false;
-
             document.querySelectorAll('.continuity-toggle').forEach(b => b.classList.add('on'));
             document.querySelectorAll('.format-chip').forEach(b => b.classList.remove('on'));
             document.getElementById('chip-all').classList.add('on');
@@ -1689,7 +1734,7 @@
         }
 
         /* ============================================================
-           MODAL
+           MODAL FORMS
         ============================================================ */
         function openModal() {
             editingId = null;
@@ -1708,7 +1753,6 @@
             editingId = id;
             document.getElementById('modal-title').innerText = 'EDIT ITEM';
             document.getElementById('submitBtn').innerText   = 'UPDATE ITEM';
-
             document.getElementById('add-title').value             = m.title || '';
             document.getElementById('add-franchise').value         = m.franchise || 'Marvel';
             document.getElementById('add-date').value              = m.release_date ? m.release_date.slice(0, 10) : '';
@@ -1736,7 +1780,6 @@
             const btn = document.getElementById('submitBtn');
             const originalLabel = editingId ? 'UPDATE ITEM' : 'SAVE ITEM';
             btn.innerText = 'Saving...'; btn.disabled = true;
-
             const payload = {
                 title:             document.getElementById('add-title').value,
                 franchise:         document.getElementById('add-franchise').value,
@@ -1751,10 +1794,8 @@
                 continuity_status: document.getElementById('add-continuity-status').value,
                 vault:             document.getElementById('add-vault').checked,
             };
-
             let error;
             if (editingId) {
-                // Editing keeps the existing watched state; inserts default to unwatched.
                 ({ error } = await supabaseClient.from('movies').update(payload).eq('id', editingId));
             } else {
                 payload.watched = false;
@@ -1773,9 +1814,6 @@
             btn.disabled = false;
         }
 
-        /* ============================================================
-           DELETE ITEM
-        ============================================================ */
         function promptDeleteItem(id) {
             const m = allMovies.find(x => x.id === id);
             const name = m ? parseComplexEpisodicTitle(m.title).mainTitle : 'this item';
@@ -1796,49 +1834,65 @@
         }
 
         /* ============================================================
-           UPDATE STATS ONLY
+           TROPHY SYSTEM LOGIC
         ============================================================ */
-        function updateStats() {
-            const today = new Date();
-            let filtered = allMovies.filter(m => m.franchise === currentFranchise);
-            // Exclude vault content from stats unless user has opened the vault
-            if (!vaultVisible) {
-                filtered = filtered.filter(m => !m.vault);
-            }
-            if (activeCanonTypes.size < 3) {
-                filtered = filtered.filter(m => activeCanonTypes.has(normaliseStatus(m.continuity_status)));
-            }
-            
-            let totalMinutes = 0, watchedMinutes = 0;
-            filtered.forEach(m => {
-                if (new Date(m.release_date) <= today) {
-                    totalMinutes += m.runtime || 0;
-                    if (m.watched) watchedMinutes += m.runtime || 0;
+        function checkAchievements() {
+            achievements.forEach(ach => {
+                if (!unlockedTrophies.includes(ach.id) && ach.requirement(allMovies)) {
+                    unlockedTrophies.push(ach.id);
+                    localStorage.setItem('unlockedTrophies', JSON.stringify(unlockedTrophies));
+                    showToast(ach);
                 }
             });
+            renderTrophyRoom();
+        }
 
-            const nextUpEl = document.getElementById('stat-next-up');
-            const nextUp   = filtered
-                .filter(m => new Date(m.release_date) <= today && !m.watched)
-                .sort((a, b) => (a.order_index || 0) - (b.order_index || 0))[0];
-                
-            if (nextUp) {
-                nextUpEl.innerText   = parseComplexEpisodicTitle(nextUp.title).mainTitle;
-                nextUpEl.style.color = 'var(--accent-color)';
-            } else {
-                nextUpEl.innerText   = 'Caught Up!';
-                nextUpEl.style.color = '#10b981';
-            }
+        function showToast(achievement) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-icon">${achievement.icon}</div>
+                <div class="toast-text">
+                    <h4>Trophy Earned!</h4>
+                    <p>${achievement.title}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4500);
+        }
 
-            const pct       = totalMinutes > 0 ? parseFloat(((watchedMinutes / totalMinutes) * 100).toFixed(2)) : 0;
-            const remaining = totalMinutes - watchedMinutes;
-            setRingProgress(pct);
-            animateCounter(document.getElementById('stat-time-watched'),  formatMinutes(watchedMinutes));
-            animateCounter(document.getElementById('stat-time-remaining'), formatMinutes(remaining));
+        function renderTrophyRoom() {
+            const list = document.getElementById('trophy-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            achievements.forEach(ach => {
+                const isUnlocked = unlockedTrophies.includes(ach.id);
+                const item = document.createElement('div');
+                item.className = `trophy-item ${isUnlocked ? 'unlocked' : ''}`;
+                item.innerHTML = `
+                    <div class="trophy-icon-lg">${isUnlocked ? ach.icon : '❓'}</div>
+                    <div class="trophy-details">
+                        <h4>${isUnlocked ? ach.title : 'Hidden Trophy'}</h4>
+                        <p>${isUnlocked ? ach.desc : 'Keep watching to reveal this milestone.'}</p>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function openTrophyRoom() {
+            renderTrophyRoom();
+            document.getElementById('trophy-modal').classList.add('active');
+        }
+
+        function closeTrophyRoom() {
+            document.getElementById('trophy-modal').classList.remove('active');
         }
 
         /* ============================================================
-           TOGGLE WATCHED
+           TOGGLE WATCHED LOGIC
         ============================================================ */
         async function toggleWatched(movieId, isChecked) {
             const movie = allMovies.find(m => m.id === movieId);
@@ -1851,6 +1905,10 @@
             }
 
             updateStats();
+            
+            // TROPHY HOOK HERE:
+            if (isChecked) checkAchievements();
+
             const { error } = await supabaseClient.from('movies').update({ watched: isChecked }).eq('id', movieId);
             if (error) {
                 console.error('Update error:', error);
@@ -1861,14 +1919,13 @@
         }
 
         /* ============================================================
-           HELPERS
+           HELPERS & CALCS
         ============================================================ */
         function formatMinutes(m) {
             const d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), min = m % 60;
             return `${d}d ${h}h ${min}m`;
         }
 
-        // Smarter formatter — hides leading zero segments for hub display
         function formatDurationSmart(minutes) {
             if (!minutes || minutes === 0) return '—';
             const d   = Math.floor(minutes / 1440);
@@ -1891,7 +1948,6 @@
             const firstUnwatched = document.querySelector('#movie-grid .card:not(.is-watched)');
             if (firstUnwatched) {
                 firstUnwatched.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // Brief highlight pulse
                 firstUnwatched.style.transition = 'box-shadow 0.3s ease';
                 firstUnwatched.style.boxShadow  = `0 0 0 2px var(--accent-color), 0 0 24px rgba(var(--accent-rgb), 0.4)`;
                 setTimeout(() => { firstUnwatched.style.boxShadow = ''; }, 1200);
@@ -1899,8 +1955,6 @@
         }
 
         function animateCounter(el, targetText, duration = 900) {
-            // Break the string into tokens, animating EVERY numeric segment
-            // (e.g. "2d 5h 30m" counts up days, hours and minutes together).
             const tokens = [];
             const regex  = /[\d.]+/g;
             let lastIndex = 0, match;
@@ -1912,7 +1966,6 @@
                 lastIndex = match.index + match[0].length;
             }
             if (lastIndex < targetText.length) tokens.push({ text: targetText.slice(lastIndex) });
-
             if (!tokens.some(t => t.num !== undefined)) { el.innerText = targetText; return; }
 
             const start = performance.now();
@@ -1945,9 +1998,6 @@
             requestAnimationFrame(step);
         }
 
-        // Normalise continuity_status to one of the three known values.
-        // Anything unrecognised (old data, typos, nulls) falls through to 'main'
-        // so entries are never silently dropped by the filter.
         const KNOWN_STATUSES = new Set(['main', 'multiverse', 'non-canon']);
         function normaliseStatus(raw) {
             if (!raw) return 'main';
@@ -1955,7 +2005,7 @@
             if (lower === 'non-canon' || lower === 'noncanon' || lower === 'non_canon') return 'non-canon';
             if (lower === 'multiverse') return 'multiverse';
             if (KNOWN_STATUSES.has(lower)) return lower;
-            return 'main'; // catch-all for anything unexpected
+            return 'main';
         }
 
         function parseComplexEpisodicTitle(fullTitle, isMovie = false) {
@@ -1978,7 +2028,6 @@
 
         function getFranchiseStats(franchise) {
             const today   = new Date();
-            // Exclude vault items so hub numbers match the default franchise view.
             const items   = allMovies.filter(m => m.franchise === franchise && !m.vault && new Date(m.release_date) <= today);
             const total   = items.reduce((s, m) => s + (m.runtime || 0), 0);
             const watched = items.filter(m => m.watched).reduce((s, m) => s + (m.runtime || 0), 0);
@@ -1991,14 +2040,49 @@
             return { total, watched, watchedCount, totalCount: items.length, pct, remaining: total - watched, nextTitle };
         }
 
+        function updateStats() {
+            const today = new Date();
+            let filtered = allMovies.filter(m => m.franchise === currentFranchise);
+            if (!vaultVisible) {
+                filtered = filtered.filter(m => !m.vault);
+            }
+            if (activeCanonTypes.size < 3) {
+                filtered = filtered.filter(m => activeCanonTypes.has(normaliseStatus(m.continuity_status)));
+            }
+            
+            let totalMinutes = 0, watchedMinutes = 0;
+            filtered.forEach(m => {
+                if (new Date(m.release_date) <= today) {
+                    totalMinutes += m.runtime || 0;
+                    if (m.watched) watchedMinutes += m.runtime || 0;
+                }
+            });
+
+            const nextUpEl = document.getElementById('stat-next-up');
+            const nextUp   = filtered
+                .filter(m => new Date(m.release_date) <= today && !m.watched)
+                .sort((a, b) => (a.order_index || 0) - (b.order_index || 0))[0];
+            if (nextUp) {
+                nextUpEl.innerText   = parseComplexEpisodicTitle(nextUp.title).mainTitle;
+                nextUpEl.style.color = 'var(--accent-color)';
+            } else {
+                nextUpEl.innerText   = 'Caught Up!';
+                nextUpEl.style.color = '#10b981';
+            }
+
+            const pct       = totalMinutes > 0 ? parseFloat(((watchedMinutes / totalMinutes) * 100).toFixed(2)) : 0;
+            const remaining = totalMinutes - watchedMinutes;
+            setRingProgress(pct);
+            animateCounter(document.getElementById('stat-time-watched'),  formatMinutes(watchedMinutes));
+            animateCounter(document.getElementById('stat-time-remaining'), formatMinutes(remaining));
+        }
+
         /* ============================================================
-           RENDER HUB
+           RENDER LOGIC
         ============================================================ */
         function renderHub() {
             const franchises = ['Marvel', 'DCU', 'Star Wars', 'The Boys', 'Arrowverse'];
             const today      = new Date();
-
-            // Overall stats — exclude vault so totals match the franchise cards below
             const allReleased    = allMovies.filter(m => !m.vault && new Date(m.release_date) <= today);
             const allTotal       = allReleased.reduce((s, m) => s + (m.runtime || 0), 0);
             const allWatched     = allReleased.filter(m => m.watched).reduce((s, m) => s + (m.runtime || 0), 0);
@@ -2006,15 +2090,13 @@
             const allPct         = allTotal > 0 ? parseFloat(((allWatched / allTotal) * 100).toFixed(1)) : 0;
             const overallCirc    = 2 * Math.PI * 36;
             const overallOffset  = overallCirc - (allPct / 100) * overallCirc;
-
             document.getElementById('hub-overall-stats').innerHTML = `
                 <div class="hub-overall-card">
                     <div class="hub-ring-box">
                         <div class="ring-wrapper">
                             <svg class="ring-svg" viewBox="0 0 88 88">
                                 <circle class="ring-track"    cx="44" cy="44" r="36"/>
-                                <circle class="ring-progress" cx="44" cy="44" r="36"
-                                    style="stroke-dasharray:${overallCirc};stroke-dashoffset:${overallOffset}"/>
+                                <circle class="ring-progress" cx="44" cy="44" r="36" style="stroke-dasharray:${overallCirc};stroke-dashoffset:${overallOffset}"/>
                             </svg>
                             <div class="ring-center-text">
                                 <span class="ring-percent">${allPct.toFixed(1)}%</span>
@@ -2040,8 +2122,6 @@
                     </div>
                 </div>
             `;
-
-            // Franchise cards
             const parts = franchises.map(f => {
                 const t      = franchiseThemes[f];
                 const s      = getFranchiseStats(f);
@@ -2050,10 +2130,8 @@
 
                 return `
                 <div class="hub-franchise-card" style="--hfc-rgb:${t.rgb}" onclick="setFranchise('${f}')">
-                    <!-- Progress bar replaces static accent bar -->
                     <div class="hfc-progress-bar-wrap">
-                        <div class="hfc-progress-bar-fill"
-                             style="width:${s.pct}%; background:linear-gradient(90deg, rgb(${t.rgb}), rgba(${t.rgb},0.5));"></div>
+                        <div class="hfc-progress-bar-fill" style="width:${s.pct}%; background:linear-gradient(90deg, rgb(${t.rgb}), rgba(${t.rgb},0.5));"></div>
                     </div>
                     <div class="hfc-body">
                         <div class="hfc-top">
@@ -2064,8 +2142,7 @@
                             <div class="hfc-ring-wrapper">
                                 <svg class="hfc-ring-svg" viewBox="0 0 72 72">
                                     <circle class="hfc-ring-track"    cx="36" cy="36" r="30"/>
-                                    <circle class="hfc-ring-progress" cx="36" cy="36" r="30"
-                                        style="stroke:rgb(${t.rgb});stroke-dashoffset:${offset}"/>
+                                    <circle class="hfc-ring-progress" cx="36" cy="36" r="30" style="stroke:rgb(${t.rgb});stroke-dashoffset:${offset}"/>
                                 </svg>
                                 <div class="hfc-ring-center">
                                     <span class="hfc-ring-pct">${s.pct}%</span>
@@ -2100,17 +2177,10 @@
             renderHubStats(franchises);
         }
 
-        /* ============================================================
-           RENDER HUB STATS (library breakdown)
-        ============================================================ */
         function renderHubStats(franchises) {
-            // Per-franchise stats (vault excluded, matching the cards above)
             const rows = franchises.map(f => ({ f, ...getFranchiseStats(f) }));
-
-            // Most-watched franchise by time actually watched
             const top = rows.reduce((best, r) => (r.watched > (best ? best.watched : -1) ? r : best), null);
             const topLabel = (top && top.watched > 0) ? top.f : '—';
-
             const bars = rows.map(r => {
                 const rgb = franchiseThemes[r.f].rgb;
                 return `
@@ -2136,15 +2206,11 @@
                 </div>`;
         }
 
-        /* ============================================================
-           RENDER FRANCHISE
-        ============================================================ */
         function renderFranchise() {
             const grid  = document.getElementById('movie-grid');
             const today = new Date();
 
             let filtered = allMovies.filter(m => m.franchise === currentFranchise);
-            // Exclude vault content unless user has enabled vault view
             if (!vaultVisible) {
                 filtered = filtered.filter(m => !m.vault);
             }
@@ -2166,11 +2232,10 @@
             if (watchedFilter === 'watched')   filtered = filtered.filter(m => m.watched);
             if (watchedFilter === 'unwatched') filtered = filtered.filter(m => !m.watched);
 
-         let displayList = filtered.filter(m => {
-    const rd = new Date(m.release_date);
-    // Strict separation: Upcoming gets future dates, the others get past dates
-    return currentView === 'Upcoming' ? rd > today : rd <= today;
-});
+            let displayList = filtered.filter(m => {
+                const rd = new Date(m.release_date);
+                return currentView === 'Upcoming' ? rd > today : rd <= today;
+            });
             
             if (currentView === 'Chronological') {
                 displayList.sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
@@ -2178,7 +2243,6 @@
                 displayList.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
             }
 
-            // Optional secondary sort applied on top of the view order
             if (currentSort !== 'default') {
                 const rating  = m => (m.imdb_rating != null ? m.imdb_rating : -1);
                 const runtime = m => (m.runtime || 0);
@@ -2204,7 +2268,6 @@
                     ? `${Math.ceil((releaseDate - today) / 86400000)} days until release`
                     : formattedDate;
                     
-                // Override with Release Label if it exists
                 if (movie.release_label) {
                     dateDisplay = movie.release_label;
                 }
@@ -2263,35 +2326,31 @@
            DATA FETCH
         ============================================================ */
         async function fetchAllMovies() {
-    let allData = [];
-    let from = 0;
-    let to = 999;
-    let hasMore = true;
+            let allData = [];
+            let from = 0;
+            let to = 999;
+            let hasMore = true;
+            while (hasMore) {
+                const { data, error } = await supabaseClient
+                    .from('movies')
+                    .select('*')
+                    .range(from, to);
+                if (error) { 
+                    console.error('Fetch error:', error); 
+                    return;
+                }
 
-    // Loop to fetch chunks of 1000 to bypass Supabase limits
-    while (hasMore) {
-        const { data, error } = await supabaseClient
-            .from('movies')
-            .select('*')
-            .range(from, to);
-
-        if (error) { 
-            console.error('Fetch error:', error); 
-            return; 
+                allData = allData.concat(data);
+                if (data.length < 1000) {
+                    hasMore = false;
+                } else {
+                    from += 1000;
+                    to += 1000;
+                }
+            }
+            allMovies = allData;
+            checkAchievements(); // Initial check on load
         }
-
-        allData = allData.concat(data);
-        
-        // If we got back fewer than 1000 rows, we are at the end
-        if (data.length < 1000) {
-            hasMore = false;
-        } else {
-            from += 1000;
-            to += 1000;
-        }
-    }
-    allMovies = allData;
-}
 
         /* ============================================================
            INIT
