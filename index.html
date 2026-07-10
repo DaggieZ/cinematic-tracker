@@ -390,6 +390,87 @@
         }
 
         /* ============================================================
+           HUB STATS PANEL
+        ============================================================ */
+        .hub-stats-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 32px;
+        }
+        .hub-stats-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .hub-stats-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 3px;
+            color: #fff;
+        }
+        .hub-highlight {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(var(--accent-rgb), 0.06);
+            border: 1px solid rgba(var(--accent-rgb), 0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+        }
+        .hub-highlight-lbl {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .hub-highlight-val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+        }
+        .hub-bar-row {
+            display: grid;
+            grid-template-columns: 110px 1fr 116px;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .hub-bar-row:first-of-type { border-top: none; }
+        .hub-bar-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 1.5px;
+            color: rgb(var(--bar-rgb));
+        }
+        .hub-bar-track {
+            height: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .hub-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: rgb(var(--bar-rgb));
+            transition: width 1s cubic-bezier(0.4,0,0.2,1);
+        }
+        .hub-bar-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            font-weight: 500;
+        }
+        .hub-bar-meta strong { color: #fff; font-weight: 700; }
+
+        /* ============================================================
            FRANCHISE VIEW
         ============================================================ */
         #franchise-view { display: none; }
@@ -624,6 +705,23 @@
             line-height: 1;
         }
         .filter-badge.visible { display: flex; }
+
+        /* Sort dropdown */
+        .sort-select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .sort-select:hover, .sort-select:focus { border-color: var(--accent-color); color: var(--accent-color); outline: none; }
+        .sort-select.active { border-color: var(--accent-color); color: var(--accent-color); }
 
         /* Filter panel drawer */
         .filter-panel {
@@ -902,6 +1000,34 @@
         }
         .watched-check svg { width: 24px; height: 24px; stroke: var(--accent-color); stroke-width: 2.5; fill: none; }
 
+        /* Card edit/delete actions */
+        .card-actions {
+            position: absolute;
+            top: 12px; left: 12px;
+            z-index: 5;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .card:hover .card-actions { opacity: 1; transform: translateY(0); }
+        .card-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(10,10,12,0.88);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .card-action-btn svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .card-action-btn.edit:hover  { border-color: var(--accent-color); color: var(--accent-color); }
+        .card-action-btn.delete:hover { border-color: #ef4444; color: #ef4444; }
+
         .card-content {
             padding: 18px;
             display: flex; flex-direction: column; gap: 12px;
@@ -1106,6 +1232,7 @@
     <div id="hub-view" class="visible">
         <div id="hub-overall-stats"></div>
         <div class="hub-franchise-grid" id="hub-franchise-grid"></div>
+        <div id="hub-stats"></div>
     </div>
 
     <div id="franchise-view">
@@ -1158,6 +1285,14 @@
                     FILTERS
                     <span class="filter-badge" id="filter-badge">0</span>
                 </button>
+                <select class="sort-select" id="sort-select" aria-label="Sort items" onchange="setSort(this.value)">
+                    <option value="default">SORT: DEFAULT</option>
+                    <option value="rating-desc">RATING (HIGH-LOW)</option>
+                    <option value="rating-asc">RATING (LOW-HIGH)</option>
+                    <option value="runtime-desc">RUNTIME (LONG-SHORT)</option>
+                    <option value="runtime-asc">RUNTIME (SHORT-LONG)</option>
+                    <option value="title-asc">TITLE (A-Z)</option>
+                </select>
             </div>
 
             <div class="filter-panel" id="filter-panel">
@@ -1219,7 +1354,7 @@
     <div class="confirm-popup" id="confirm-popup">
         <span id="confirm-text">Clear all watched for Marvel?</span>
         <div class="confirm-popup-btns">
-            <button class="btn-confirm-yes" onclick="executeClearWatched()">YES, CLEAR</button>
+            <button class="btn-confirm-yes" onclick="confirmYes()">YES</button>
             <button class="btn-confirm-no"  onclick="dismissClearPopup()">CANCEL</button>
         </div>
     </div>
@@ -1227,7 +1362,7 @@
     <div class="modal-overlay" id="addModal">
         <div class="modal-content">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;">
-                <h2 class="modal-title">ADD NEW ITEM</h2>
+                <h2 class="modal-title" id="modal-title">ADD NEW ITEM</h2>
                 <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:28px;line-height:1;" onclick="closeModal()">&times;</button>
             </div>
             <form id="addForm" onsubmit="submitNewItem(event)">
@@ -1293,7 +1428,7 @@
                         </select>
                     </div>
                 </div>
-                <div style="form-group" style="margin-bottom:16px;">
+                <div class="form-group">
                     <label class="form-label">IMDb Rating</label>
                     <input type="text" id="add-imdb" class="form-input" placeholder="7.8">
                 </div>
@@ -1321,7 +1456,7 @@
            SUPABASE
         ============================================================ */
         const SUPABASE_URL      = "https://wagyonbawtmcmhrqpmxi.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhZ3lvbmJhd3RtY21ocnFwbXhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjYwMDYsImV4cCI6MjA5NTMwMjAwNn0.hdmWhk7H6G85VGq0IyTY7oEFNqp4gvWxn3nGyrO1TxQ";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhZ3lvbmJhd3RtY21ocnFwbXhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjYwMDYsImV4cCI6MjA5NTMwMjAwNn0.hdmWhk7H6G85VGq0IyTY7oEFNqp4gvWxn3nGyrO1TxQ"; // NOTE: your real key was hidden when you shared the file — paste it back here
         const supabaseClient    = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         /* ============================================================
@@ -1335,6 +1470,9 @@
         let searchDebounceTimer = null;
         let filterPanelOpen   = false;
         let vaultVisible      = false; // Vault content hidden by default
+        let currentSort       = 'default'; // secondary sort applied on top of the view order
+        let editingId         = null;      // id of the item currently being edited (null = add mode)
+        let pendingConfirm    = null;      // callback run when the confirm popup is accepted
 
         // Filter state — multi-select continuity
         let activeCanonTypes  = new Set(['main', 'multiverse', 'non-canon']); // all on by default
@@ -1406,6 +1544,12 @@
                 document.getElementById(id).classList.remove('active'));
             const map = { Chronological:'btn-chrono', Release:'btn-release', Upcoming:'btn-upcoming' };
             document.getElementById(map[view]).classList.add('active');
+            renderFranchise();
+        }
+
+        function setSort(value) {
+            currentSort = value;
+            document.getElementById('sort-select').classList.toggle('active', value !== 'default');
             renderFranchise();
         }
 
@@ -1520,9 +1664,16 @@
             document.getElementById('confirm-text').innerText =
                 `Clear all watched for ${currentFranchise}?`;
             document.getElementById('confirm-popup').classList.add('visible');
+            pendingConfirm = executeClearWatched;
         }
         function dismissClearPopup() {
             document.getElementById('confirm-popup').classList.remove('visible');
+            pendingConfirm = null;
+        }
+        function confirmYes() {
+            const action = pendingConfirm;
+            dismissClearPopup();
+            if (typeof action === 'function') action();
         }
         async function executeClearWatched() {
             dismissClearPopup();
@@ -1541,21 +1692,52 @@
            MODAL
         ============================================================ */
         function openModal() {
+            editingId = null;
+            document.getElementById('addForm').reset();
+            document.getElementById('modal-title').innerText = 'ADD NEW ITEM';
+            document.getElementById('submitBtn').innerText   = 'SAVE ITEM';
             if (currentMode === 'franchise') {
                 document.getElementById('add-franchise').value = currentFranchise;
             }
             document.getElementById('addModal').style.display = 'flex';
         }
+
+        function openEditModal(id) {
+            const m = allMovies.find(x => x.id === id);
+            if (!m) return;
+            editingId = id;
+            document.getElementById('modal-title').innerText = 'EDIT ITEM';
+            document.getElementById('submitBtn').innerText   = 'UPDATE ITEM';
+
+            document.getElementById('add-title').value             = m.title || '';
+            document.getElementById('add-franchise').value         = m.franchise || 'Marvel';
+            document.getElementById('add-date').value              = m.release_date ? m.release_date.slice(0, 10) : '';
+            document.getElementById('add-release-label').value     = m.release_label || '';
+            document.getElementById('add-runtime').value           = m.runtime || '';
+            document.getElementById('add-chapter').value           = m.chapter || '';
+            document.getElementById('add-order-index').value       = m.order_index != null ? m.order_index : '';
+            document.getElementById('add-format').value            = m.format || 'Series';
+            document.getElementById('add-continuity-status').value = normaliseStatus(m.continuity_status);
+            document.getElementById('add-imdb').value              = m.imdb_rating != null ? m.imdb_rating : '';
+            document.getElementById('add-poster').value            = m.poster_url || '';
+            document.getElementById('add-vault').checked           = m.vault === true;
+
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
         function closeModal() {
             document.getElementById('addModal').style.display = 'none';
             document.getElementById('addForm').reset();
+            editingId = null;
         }
+
         async function submitNewItem(event) {
             event.preventDefault();
             const btn = document.getElementById('submitBtn');
+            const originalLabel = editingId ? 'UPDATE ITEM' : 'SAVE ITEM';
             btn.innerText = 'Saving...'; btn.disabled = true;
-            
-            const newItem = {
+
+            const payload = {
                 title:             document.getElementById('add-title').value,
                 franchise:         document.getElementById('add-franchise').value,
                 release_date:      document.getElementById('add-date').value,
@@ -1568,15 +1750,49 @@
                 poster_url:        document.getElementById('add-poster').value || null,
                 continuity_status: document.getElementById('add-continuity-status').value,
                 vault:             document.getElementById('add-vault').checked,
-                watched:           false
             };
-            
-            const { error } = await supabaseClient.from('movies').insert([newItem]);
-            if (error) { console.error('Insert error:', error); alert('Could not save item.'); }
-            else { closeModal(); await fetchAllMovies();
-            if (currentMode === 'hub') renderHub(); else renderFranchise(); }
-            btn.innerText = 'SAVE ITEM';
+
+            let error;
+            if (editingId) {
+                // Editing keeps the existing watched state; inserts default to unwatched.
+                ({ error } = await supabaseClient.from('movies').update(payload).eq('id', editingId));
+            } else {
+                payload.watched = false;
+                ({ error } = await supabaseClient.from('movies').insert([payload]));
+            }
+
+            if (error) {
+                console.error('Save error:', error);
+                alert('Could not save item.');
+            } else {
+                closeModal();
+                await fetchAllMovies();
+                if (currentMode === 'hub') renderHub(); else renderFranchise();
+            }
+            btn.innerText = originalLabel;
             btn.disabled = false;
+        }
+
+        /* ============================================================
+           DELETE ITEM
+        ============================================================ */
+        function promptDeleteItem(id) {
+            const m = allMovies.find(x => x.id === id);
+            const name = m ? parseComplexEpisodicTitle(m.title).mainTitle : 'this item';
+            document.getElementById('confirm-text').innerText = `Delete "${name}"?`;
+            document.getElementById('confirm-popup').classList.add('visible');
+            pendingConfirm = () => deleteItem(id);
+        }
+
+        async function deleteItem(id) {
+            allMovies = allMovies.filter(m => m.id !== id);
+            if (currentMode === 'hub') renderHub(); else renderFranchise();
+            const { error } = await supabaseClient.from('movies').delete().eq('id', id);
+            if (error) {
+                console.error('Delete error:', error);
+                await fetchAllMovies();
+                if (currentMode === 'hub') renderHub(); else renderFranchise();
+            }
         }
 
         /* ============================================================
@@ -1683,17 +1899,29 @@
         }
 
         function animateCounter(el, targetText, duration = 900) {
-            const numMatch = targetText.match(/[\d.]+/);
-            if (!numMatch) { el.innerText = targetText; return; }
-            const target = parseFloat(numMatch[0]);
-            const prefix = targetText.slice(0, numMatch.index);
-            const suffix = targetText.slice(numMatch.index + numMatch[0].length);
-            const start  = performance.now();
+            // Break the string into tokens, animating EVERY numeric segment
+            // (e.g. "2d 5h 30m" counts up days, hours and minutes together).
+            const tokens = [];
+            const regex  = /[\d.]+/g;
+            let lastIndex = 0, match;
+            while ((match = regex.exec(targetText)) !== null) {
+                if (match.index > lastIndex) {
+                    tokens.push({ text: targetText.slice(lastIndex, match.index) });
+                }
+                tokens.push({ num: parseFloat(match[0]), decimals: match[0].includes('.') ? 2 : 0 });
+                lastIndex = match.index + match[0].length;
+            }
+            if (lastIndex < targetText.length) tokens.push({ text: targetText.slice(lastIndex) });
+
+            if (!tokens.some(t => t.num !== undefined)) { el.innerText = targetText; return; }
+
+            const start = performance.now();
             function step(now) {
                 const p    = Math.min((now - start) / duration, 1);
                 const ease = 1 - Math.pow(1 - p, 3);
-                const decimals = numMatch[0].includes('.') ? 2 : 0;
-                el.innerText = prefix + (target * ease).toFixed(decimals) + suffix;
+                el.innerText = tokens.map(t =>
+                    t.num !== undefined ? (t.num * ease).toFixed(t.decimals) : t.text
+                ).join('');
                 if (p < 1) requestAnimationFrame(step);
             }
             requestAnimationFrame(step);
@@ -1750,7 +1978,8 @@
 
         function getFranchiseStats(franchise) {
             const today   = new Date();
-            const items   = allMovies.filter(m => m.franchise === franchise && new Date(m.release_date) <= today);
+            // Exclude vault items so hub numbers match the default franchise view.
+            const items   = allMovies.filter(m => m.franchise === franchise && !m.vault && new Date(m.release_date) <= today);
             const total   = items.reduce((s, m) => s + (m.runtime || 0), 0);
             const watched = items.filter(m => m.watched).reduce((s, m) => s + (m.runtime || 0), 0);
             const watchedCount = items.filter(m => m.watched).length;
@@ -1769,8 +1998,8 @@
             const franchises = ['Marvel', 'DCU', 'Star Wars', 'The Boys', 'Arrowverse'];
             const today      = new Date();
 
-            // Overall stats
-            const allReleased    = allMovies.filter(m => new Date(m.release_date) <= today);
+            // Overall stats — exclude vault so totals match the franchise cards below
+            const allReleased    = allMovies.filter(m => !m.vault && new Date(m.release_date) <= today);
             const allTotal       = allReleased.reduce((s, m) => s + (m.runtime || 0), 0);
             const allWatched     = allReleased.filter(m => m.watched).reduce((s, m) => s + (m.runtime || 0), 0);
             const allWatchedCnt  = allReleased.filter(m => m.watched).length;
@@ -1868,6 +2097,43 @@
             });
 
             document.getElementById('hub-franchise-grid').innerHTML = parts.join('');
+            renderHubStats(franchises);
+        }
+
+        /* ============================================================
+           RENDER HUB STATS (library breakdown)
+        ============================================================ */
+        function renderHubStats(franchises) {
+            // Per-franchise stats (vault excluded, matching the cards above)
+            const rows = franchises.map(f => ({ f, ...getFranchiseStats(f) }));
+
+            // Most-watched franchise by time actually watched
+            const top = rows.reduce((best, r) => (r.watched > (best ? best.watched : -1) ? r : best), null);
+            const topLabel = (top && top.watched > 0) ? top.f : '—';
+
+            const bars = rows.map(r => {
+                const rgb = franchiseThemes[r.f].rgb;
+                return `
+                <div class="hub-bar-row" style="--bar-rgb:${rgb}">
+                    <div class="hub-bar-name">${r.f.toUpperCase()}</div>
+                    <div class="hub-bar-track">
+                        <div class="hub-bar-fill" style="width:${r.pct}%"></div>
+                    </div>
+                    <div class="hub-bar-meta"><strong>${r.pct}%</strong> · ${r.watchedCount}/${r.totalCount} · ${formatDurationSmart(r.watched)}</div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('hub-stats').innerHTML = `
+                <div class="hub-stats-panel">
+                    <div class="hub-stats-header">
+                        <div class="hub-stats-title">LIBRARY BREAKDOWN</div>
+                        <div class="hub-highlight">
+                            <span class="hub-highlight-lbl">Most Watched</span>
+                            <span class="hub-highlight-val">${topLabel.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    ${bars}
+                </div>`;
         }
 
         /* ============================================================
@@ -1912,6 +2178,20 @@
                 displayList.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
             }
 
+            // Optional secondary sort applied on top of the view order
+            if (currentSort !== 'default') {
+                const rating  = m => (m.imdb_rating != null ? m.imdb_rating : -1);
+                const runtime = m => (m.runtime || 0);
+                const sorters = {
+                    'rating-desc':  (a, b) => rating(b) - rating(a),
+                    'rating-asc':   (a, b) => rating(a) - rating(b),
+                    'runtime-desc': (a, b) => runtime(b) - runtime(a),
+                    'runtime-asc':  (a, b) => runtime(a) - runtime(b),
+                    'title-asc':    (a, b) => a.title.localeCompare(b.title),
+                };
+                if (sorters[currentSort]) displayList.sort(sorters[currentSort]);
+            }
+
             const parts = displayList.map((movie, i) => {
                 const releaseDate   = new Date(movie.release_date);
                 const isUpcoming    = releaseDate > today;
@@ -1937,8 +2217,16 @@
                 return `
                 <div id="card-${movie.id}" class="card ${movie.watched ? 'is-watched' : ''} ${status === 'multiverse' ? 'is-multiverse' : ''} ${status === 'non-canon' ? 'is-non-canon' : ''}" style="animation-delay:${delay}ms">
                     <div class="card-poster-wrapper">
+                        <div class="card-actions">
+                            <button class="card-action-btn edit" title="Edit item" onclick="openEditModal(${movie.id})">
+                                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                            </button>
+                            <button class="card-action-btn delete" title="Delete item" onclick="promptDeleteItem(${movie.id})">
+                                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
                         <div class="poster-fallback">${parsed.mainTitle}</div>
-                        ${movie.poster_url ? `<img class="card-poster" src="${movie.poster_url}" alt="${parsed.mainTitle}" loading="lazy">` : ''}
+                        ${movie.poster_url ? `<img class="card-poster" src="${movie.poster_url}" alt="${parsed.mainTitle}" loading="lazy" onerror="this.style.display='none'">` : ''}
                         ${parsed.episodicCode ? `<div class="episode-tag">${parsed.episodicCode}</div>` : ''}
                         <div class="watched-overlay"><div class="watched-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div></div>
                     </div>
