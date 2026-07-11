@@ -21,6 +21,9 @@
             --text-muted: #8e8e93;
             --multiverse-color: #eab308;
             --noncanon-color: #a855f7;
+            /* New Status Colors */
+            --softcanon-color: #14b8a6;
+            --elseworlds-color: #f97316;
         }
         body.theme-marvel     { --accent-color: #E21217; --accent-rgb: 226,18,23; }
         body.theme-dcu        { --accent-color: #0074f0; --accent-rgb: 0,116,240; }
@@ -62,21 +65,19 @@
            HEADER
         ============================================================ */
         header {
-    background-color: var(--bg-card);
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 -24px 24px -24px;
-
-    position: sticky;
-    top: 0;
-    z-index: 999;
-
-    backdrop-filter: blur(16px);
-    background: rgba(18,18,21,0.88);
-}
+            background-color: var(--bg-card);
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 -24px 24px -24px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            backdrop-filter: blur(16px);
+            background: rgba(18,18,21,0.88);
+        }
         h1 {
             margin: 0;
             font-family: 'Bebas Neue', sans-serif;
@@ -149,7 +150,7 @@
         #hub-view { display: none; }
         #hub-view.visible { display: block; }
 
-        /* Hub overall stats — single wide card with ring */
+        /* Hub overall stats */
         .hub-overall-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -211,7 +212,7 @@
             font-weight: 600;
         }
 
-        /* Hub franchise card progress bar */
+        /* Hub franchise card */
         .hfc-progress-bar-wrap {
             height: 4px;
             background: rgba(255,255,255,0.05);
@@ -247,11 +248,6 @@
             border-color: rgba(var(--hfc-rgb), 0.5);
         }
 
-        .hub-franchise-card .hfc-accent-bar {
-            height: 4px;
-            background: linear-gradient(90deg, rgba(var(--hfc-rgb),1), rgba(var(--hfc-rgb),0.2));
-        }
-
         .hub-franchise-card .hfc-body {
             padding: 28px;
             display: flex;
@@ -273,7 +269,6 @@
             line-height: 1;
         }
 
-        /* Mini ring inside hub card */
         .hfc-ring-wrapper {
             position: relative;
             width: 72px;
@@ -477,18 +472,17 @@
         #franchise-view.visible { display: block; }
 
         /* Stats dashboard */
-        /* Stats dashboard */
         .dashboard {
-    display: grid;
-    grid-template-columns: auto 1fr 1fr 1fr;
-    gap: 0;
-    background-color: var(--bg-card);
-    margin-bottom: 24px;
-    border-radius: 14px;
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-    position: relative;
-}
+            display: grid;
+            grid-template-columns: auto 1fr 1fr 1fr;
+            gap: 0;
+            background-color: var(--bg-card);
+            margin-bottom: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
         .dashboard::before {
             content: '';
             position: absolute;
@@ -761,7 +755,7 @@
             flex-wrap: wrap;
         }
 
-        /* Continuity toggle buttons — independently activatable */
+        /* Continuity toggle buttons */
         .continuity-toggle {
             background: none;
             border: 1px solid var(--border-color);
@@ -789,6 +783,16 @@
             background: rgba(168,85,247,0.1);
             border-color: var(--noncanon-color);
             color: var(--noncanon-color);
+        }
+        .continuity-toggle[data-type="soft-canon"].on {
+            background: rgba(20, 184, 166, 0.1);
+            border-color: var(--softcanon-color);
+            color: var(--softcanon-color);
+        }
+        .continuity-toggle[data-type="elseworlds"].on {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: var(--elseworlds-color);
+            color: var(--elseworlds-color);
         }
 
         /* Format & watched toggles */
@@ -827,7 +831,7 @@
         }
         .filter-reset:hover { color: #ef4444; }
 
-        /* Vault toggle — distinct from regular filter chips */
+        /* Vault toggle */
         .vault-toggle-row {
             display: flex;
             align-items: center;
@@ -839,9 +843,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .vault-toggle-row:hover {
-            border-color: rgba(var(--accent-rgb), 0.4);
-        }
+        .vault-toggle-row:hover { border-color: rgba(var(--accent-rgb), 0.4); }
         .vault-toggle-row.on {
             background: rgba(var(--accent-rgb), 0.06);
             border-color: rgba(var(--accent-rgb), 0.3);
@@ -859,10 +861,7 @@
             transition: color 0.2s ease;
         }
         .vault-toggle-row.on .vault-toggle-title { color: var(--accent-color); }
-        .vault-toggle-sub {
-            font-size: 11px;
-            color: #52525b;
-        }
+        .vault-toggle-sub { font-size: 11px; color: #52525b; }
         .vault-toggle-indicator {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 12px;
@@ -910,8 +909,11 @@
             animation: cardReveal 0.45s ease forwards;
         }
 
+        /* Continuity Card Borders & Glows */
         .card.is-multiverse { border-left: 4px solid var(--multiverse-color); }
         .card.is-non-canon  { border-left: 4px solid var(--noncanon-color); }
+        .card.is-soft-canon { border-left: 4px solid var(--softcanon-color); }
+        .card.is-elseworlds { border-left: 4px solid var(--elseworlds-color); }
 
         .card:hover {
             transform: translateY(-6px);
@@ -920,6 +922,8 @@
         }
         .card.is-multiverse:hover { border-color: var(--multiverse-color); box-shadow: 0 18px 32px rgba(0,0,0,0.7), 0 0 15px rgba(234,179,8,0.15); }
         .card.is-non-canon:hover  { border-color: var(--noncanon-color); box-shadow: 0 18px 32px rgba(0,0,0,0.7), 0 0 15px rgba(168,85,247,0.15); }
+        .card.is-soft-canon:hover { border-color: var(--softcanon-color); box-shadow: 0 18px 32px rgba(0,0,0,0.7), 0 0 15px rgba(20,184,166,0.15); }
+        .card.is-elseworlds:hover { border-color: var(--elseworlds-color); box-shadow: 0 18px 32px rgba(0,0,0,0.7), 0 0 15px rgba(249,115,22,0.15); }
 
         .card.is-watched {
             background-color: #050507;
@@ -964,6 +968,7 @@
             transition: opacity 0.4s ease, filter 0.4s ease;
         }
 
+        /* Continuity Episode Tags */
         .episode-tag {
             position: absolute;
             top: 12px; right: 12px;
@@ -980,6 +985,8 @@
         }
         .card.is-multiverse .episode-tag { border-color: var(--multiverse-color); }
         .card.is-non-canon  .episode-tag { border-color: var(--noncanon-color); }
+        .card.is-soft-canon .episode-tag { border-color: var(--softcanon-color); }
+        .card.is-elseworlds .episode-tag { border-color: var(--elseworlds-color); }
 
         .watched-overlay {
             position: absolute;
@@ -1034,6 +1041,7 @@
             flex-grow: 1;
         }
 
+        /* Continuity Chapter Tags */
         .card-chapter-tag {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 12px; letter-spacing: 2px;
@@ -1041,6 +1049,8 @@
         }
         .card.is-multiverse .card-chapter-tag { color: var(--multiverse-color); }
         .card.is-non-canon  .card-chapter-tag { color: var(--noncanon-color); }
+        .card.is-soft-canon .card-chapter-tag { color: var(--softcanon-color); }
+        .card.is-elseworlds .card-chapter-tag { color: var(--elseworlds-color); }
 
         .card-title {
             font-size: 17px;
@@ -1061,6 +1071,7 @@
 
         .badge-row { display: flex; gap: 8px; align-items: center; }
 
+        /* Continuity Badges */
         .badge {
             padding: 4px 10px;
             border-radius: 6px;
@@ -1069,8 +1080,11 @@
         .badge.imdb    { background: rgba(234,179,8,0.1); color: #f59e0b; border: 1px solid rgba(234,179,8,0.2); }
         .badge.format  { background: rgba(255,255,255,0.06); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1); }
         .badge.status-tag { margin-left: auto; }
+        
         .card.is-multiverse .badge.status-tag { background: rgba(234,179,8,0.15); color: var(--multiverse-color); border: 1px solid rgba(234,179,8,0.3); }
         .card.is-non-canon  .badge.status-tag { background: rgba(168,85,247,0.15); color: var(--noncanon-color); border: 1px solid rgba(168,85,247,0.3); }
+        .card.is-soft-canon .badge.status-tag { background: rgba(20,184,166,0.15); color: var(--softcanon-color); border: 1px solid rgba(20,184,166,0.3); }
+        .card.is-elseworlds .badge.status-tag { background: rgba(249,115,22,0.15); color: var(--elseworlds-color); border: 1px solid rgba(249,115,22,0.3); }
         .card.is-watched .badge { opacity: 0.25; }
 
         .checkbox-container {
@@ -1091,25 +1105,30 @@
         .premium-toggle-wrapper input { opacity: 0; width: 0; height: 0; }
 
         .premium-slider {
-            position: absolute;
-            cursor: pointer; inset: 0;
+            position: absolute; cursor: pointer; inset: 0;
             background: #1e1e24; border: 1px solid #2e2e38;
             border-radius: 34px;
             transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
         }
         .premium-slider:before {
-            position: absolute;
-            content: "";
+            position: absolute; content: "";
             height: 16px; width: 16px; left: 3px; bottom: 3px;
             background: #71717a; border-radius: 50%;
             transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
         }
+        
+        /* Continuity Toggles */
         input:checked + .premium-slider { background: rgba(var(--accent-rgb),0.15); border-color: var(--accent-color); box-shadow: 0 0 10px rgba(var(--accent-rgb),0.3); }
         .card.is-multiverse input:checked + .premium-slider { background: rgba(234,179,8,0.15); border-color: var(--multiverse-color); box-shadow: 0 0 10px rgba(234,179,8,0.3); }
         .card.is-non-canon  input:checked + .premium-slider { background: rgba(168,85,247,0.15); border-color: var(--noncanon-color); box-shadow: 0 0 10px rgba(168,85,247,0.3); }
+        .card.is-soft-canon input:checked + .premium-slider { background: rgba(20,184,166,0.15); border-color: var(--softcanon-color); box-shadow: 0 0 10px rgba(20,184,166,0.3); }
+        .card.is-elseworlds input:checked + .premium-slider { background: rgba(249,115,22,0.15); border-color: var(--elseworlds-color); box-shadow: 0 0 10px rgba(249,115,22,0.3); }
+        
         input:checked + .premium-slider:before { transform: translateX(22px); background: var(--accent-color); }
         .card.is-multiverse input:checked + .premium-slider:before { background: var(--multiverse-color); }
         .card.is-non-canon  input:checked + .premium-slider:before { background: var(--noncanon-color); }
+        .card.is-soft-canon input:checked + .premium-slider:before { background: var(--softcanon-color); }
+        .card.is-elseworlds input:checked + .premium-slider:before { background: var(--elseworlds-color); }
 
         /* ============================================================
            SCROLL BUTTONS
@@ -1141,8 +1160,7 @@
             transform: translateX(-50%) translateY(20px);
             background: var(--bg-card); border: 1px solid #ef4444;
             border-radius: 12px; padding: 16px 20px;
-            display: flex;
-            align-items: center; gap: 16px;
+            display: flex; align-items: center; gap: 16px;
             z-index: 200; opacity: 0; pointer-events: none;
             transition: all 0.25s ease; white-space: nowrap;
             backdrop-filter: blur(12px);
@@ -1216,11 +1234,11 @@
         <div class="header-controls">
             <div class="franchise-nav">
                 <button class="nav-btn active" id="nav-Home"       onclick="goHome()">HOME</button>
-                <button class="nav-btn"         id="nav-Marvel"     onclick="setFranchise('Marvel')">MARVEL</button>
-                <button class="nav-btn"         id="nav-DCU"        onclick="setFranchise('DCU')">DCU</button>
-                <button class="nav-btn"         id="nav-StarWars"   onclick="setFranchise('Star Wars')">STAR WARS</button>
-                <button class="nav-btn"         id="nav-TheBoys"    onclick="setFranchise('The Boys')">THE BOYS</button>
-                <button class="nav-btn"         id="nav-Arrowverse" onclick="setFranchise('Arrowverse')">ARROWVERSE</button>
+                <button class="nav-btn"        id="nav-Marvel"     onclick="setFranchise('Marvel')">MARVEL</button>
+                <button class="nav-btn"        id="nav-DCU"        onclick="setFranchise('DCU')">DCU</button>
+                <button class="nav-btn"        id="nav-StarWars"   onclick="setFranchise('Star Wars')">STAR WARS</button>
+                <button class="nav-btn"        id="nav-TheBoys"    onclick="setFranchise('The Boys')">THE BOYS</button>
+                <button class="nav-btn"        id="nav-Arrowverse" onclick="setFranchise('Arrowverse')">ARROWVERSE</button>
             </div>
             <div class="header-right-btns">
                 <button class="btn-clear-watched" id="btn-clear-watched" onclick="promptClearWatched()" style="display:none;">CLEAR WATCHED</button>
@@ -1302,7 +1320,9 @@
                             <div class="filter-section-label">Continuity</div>
                             <div class="filter-toggle-group">
                                 <button class="continuity-toggle on" data-type="main"       onclick="toggleContinuity('main')">Main Timeline</button>
+                                <button class="continuity-toggle on" data-type="soft-canon" onclick="toggleContinuity('soft-canon')">Soft Canon</button>
                                 <button class="continuity-toggle on" data-type="multiverse" onclick="toggleContinuity('multiverse')">Multiverse</button>
+                                <button class="continuity-toggle on" data-type="elseworlds" onclick="toggleContinuity('elseworlds')">Elseworlds</button>
                                 <button class="continuity-toggle on" data-type="non-canon"  onclick="toggleContinuity('non-canon')">Non-Canon</button>
                             </div>
                         </div>
@@ -1323,7 +1343,6 @@
                 </div>
             </div>
 
-            <!-- Vault toggle — separate row, opt-in -->
             <div class="vault-toggle-row" id="vault-toggle-row" onclick="toggleVault()">
                 <div class="vault-toggle-label">
                     <span class="vault-toggle-title">⚿ THE VAULT</span>
@@ -1423,7 +1442,9 @@
                         <label class="form-label">Continuity Status</label>
                         <select id="add-continuity-status" class="form-select">
                             <option value="main">Main Timeline (Canon)</option>
+                            <option value="soft-canon">Soft Canon</option>
                             <option value="multiverse">Multiverse (Wider Canon)</option>
+                            <option value="elseworlds">Elseworlds</option>
                             <option value="non-canon">Non-Canon</option>
                         </select>
                     </div>
@@ -1469,15 +1490,16 @@
         let searchQuery       = '';
         let searchDebounceTimer = null;
         let filterPanelOpen   = false;
-        let vaultVisible      = false; // Vault content hidden by default
-        let currentSort       = 'default'; // secondary sort applied on top of the view order
-        let editingId         = null;      // id of the item currently being edited (null = add mode)
-        let pendingConfirm    = null;      // callback run when the confirm popup is accepted
+        let vaultVisible      = false;      // Vault content hidden by default
+        let currentSort       = 'default';  // secondary sort applied on top of the view order
+        let editingId         = null;       // id of the item currently being edited (null = add mode)
+        let pendingConfirm    = null;       // callback run when the confirm popup is accepted
 
-        // Filter state — multi-select continuity
-        let activeCanonTypes  = new Set(['main', 'multiverse', 'non-canon']); // all on by default
-        let activeFormats     = new Set(); // empty = show all formats
-        let watchedFilter     = 'all'; // 'all' | 'watched' | 'unwatched'
+        // Filter state — multi-select continuity (Dynamically Scalable)
+        const KNOWN_STATUSES  = new Set(['main', 'soft-canon', 'multiverse', 'elseworlds', 'non-canon']);
+        let activeCanonTypes  = new Set([...KNOWN_STATUSES]); // all on by default
+        let activeFormats     = new Set();  // empty = show all formats
+        let watchedFilter     = 'all';      // 'all' | 'watched' | 'unwatched'
 
         const franchiseWatermarks = {
             Marvel:      'https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg',
@@ -1607,10 +1629,11 @@
 
         function updateFilterBadge() {
             let count = 0;
-            if (activeCanonTypes.size < 3) count++;
+            if (activeCanonTypes.size < KNOWN_STATUSES.size) count++;
             if (activeFormats.size > 0) count += activeFormats.size;
             if (watchedFilter !== 'all') count++;
             if (vaultVisible) count++;
+            
             const badge = document.getElementById('filter-badge');
             badge.innerText = count;
             badge.classList.toggle('visible', count > 0);
@@ -1627,7 +1650,7 @@
         }
 
         function resetFilters() {
-            activeCanonTypes = new Set(['main', 'multiverse', 'non-canon']);
+            activeCanonTypes = new Set([...KNOWN_STATUSES]);
             activeFormats    = new Set();
             watchedFilter    = 'all';
             vaultVisible     = false;
@@ -1639,6 +1662,7 @@
             document.getElementById('chip-watched').classList.remove('on');
             document.getElementById('vault-toggle-row').classList.remove('on');
             document.getElementById('vault-indicator').innerText = 'HIDDEN';
+            
             updateFilterBadge();
             renderFranchise();
         }
@@ -1679,8 +1703,10 @@
             dismissClearPopup();
             allMovies.forEach(m => { if (m.franchise === currentFranchise) m.watched = false; });
             renderFranchise();
+
             const { error } = await supabaseClient.from('movies')
                 .update({ watched: false }).eq('franchise', currentFranchise);
+            
             if (error) {
                 console.error('Clear watched error:', error);
                 await fetchAllMovies();
@@ -1696,6 +1722,7 @@
             document.getElementById('addForm').reset();
             document.getElementById('modal-title').innerText = 'ADD NEW ITEM';
             document.getElementById('submitBtn').innerText   = 'SAVE ITEM';
+            
             if (currentMode === 'franchise') {
                 document.getElementById('add-franchise').value = currentFranchise;
             }
@@ -1787,6 +1814,7 @@
         async function deleteItem(id) {
             allMovies = allMovies.filter(m => m.id !== id);
             if (currentMode === 'hub') renderHub(); else renderFranchise();
+            
             const { error } = await supabaseClient.from('movies').delete().eq('id', id);
             if (error) {
                 console.error('Delete error:', error);
@@ -1801,11 +1829,12 @@
         function updateStats() {
             const today = new Date();
             let filtered = allMovies.filter(m => m.franchise === currentFranchise);
+            
             // Exclude vault content from stats unless user has opened the vault
             if (!vaultVisible) {
                 filtered = filtered.filter(m => !m.vault);
             }
-            if (activeCanonTypes.size < 3) {
+            if (activeCanonTypes.size < KNOWN_STATUSES.size) {
                 filtered = filtered.filter(m => activeCanonTypes.has(normaliseStatus(m.continuity_status)));
             }
             
@@ -1851,6 +1880,7 @@
             }
 
             updateStats();
+            
             const { error } = await supabaseClient.from('movies').update({ watched: isChecked }).eq('id', movieId);
             if (error) {
                 console.error('Update error:', error);
@@ -1904,6 +1934,7 @@
             const tokens = [];
             const regex  = /[\d.]+/g;
             let lastIndex = 0, match;
+            
             while ((match = regex.exec(targetText)) !== null) {
                 if (match.index > lastIndex) {
                     tokens.push({ text: targetText.slice(lastIndex, match.index) });
@@ -1912,7 +1943,6 @@
                 lastIndex = match.index + match[0].length;
             }
             if (lastIndex < targetText.length) tokens.push({ text: targetText.slice(lastIndex) });
-
             if (!tokens.some(t => t.num !== undefined)) { el.innerText = targetText; return; }
 
             const start = performance.now();
@@ -1932,9 +1962,11 @@
             const circ   = 2 * Math.PI * 36;
             circle.style.strokeDasharray  = circ;
             circle.style.strokeDashoffset = circ;
+            
             requestAnimationFrame(() => requestAnimationFrame(() => {
                 circle.style.strokeDashoffset = circ - (percent / 100) * circ;
             }));
+            
             const ringText = document.getElementById('ring-percent-text');
             const start    = performance.now();
             function step(now) {
@@ -1945,23 +1977,23 @@
             requestAnimationFrame(step);
         }
 
-        // Normalise continuity_status to one of the three known values.
-        // Anything unrecognised (old data, typos, nulls) falls through to 'main'
-        // so entries are never silently dropped by the filter.
-        const KNOWN_STATUSES = new Set(['main', 'multiverse', 'non-canon']);
         function normaliseStatus(raw) {
             if (!raw) return 'main';
-            const lower = raw.toLowerCase().trim();
-            if (lower === 'non-canon' || lower === 'noncanon' || lower === 'non_canon') return 'non-canon';
-            if (lower === 'multiverse') return 'multiverse';
+            let lower = raw.toLowerCase().trim();
+            
+            if (lower === 'noncanon' || lower === 'non_canon') lower = 'non-canon';
+            if (lower === 'softcanon' || lower === 'soft_canon') lower = 'soft-canon';
+            if (lower === 'elseworld') lower = 'elseworlds';
+            
             if (KNOWN_STATUSES.has(lower)) return lower;
-            return 'main'; // catch-all for anything unexpected
+            return 'main';
         }
 
         function parseComplexEpisodicTitle(fullTitle, isMovie = false) {
             let mainTitle = fullTitle, subtitle = '', episodicCode = '';
             const episodeRegex = /(Season\s?\d+\s?Episode\s?\d+|S\d+\s?E\d+)/i;
             const regexMatch   = fullTitle.match(episodeRegex);
+            
             if (regexMatch) {
                 const digits = regexMatch[0].match(/\d+/g);
                 if (digits && digits.length >= 2) episodicCode = `S${digits[0]} - E${digits[1]}`;
@@ -1988,6 +2020,7 @@
                 .filter(m => !m.watched)
                 .sort((a, b) => (a.order_index || 0) - (b.order_index || 0))[0];
             const nextTitle = nextUp ? parseComplexEpisodicTitle(nextUp.title).mainTitle : 'Caught Up!';
+            
             return { total, watched, watchedCount, totalCount: items.length, pct, remaining: total - watched, nextTitle };
         }
 
@@ -1997,7 +2030,7 @@
         function renderHub() {
             const franchises = ['Marvel', 'DCU', 'Star Wars', 'The Boys', 'Arrowverse'];
             const today      = new Date();
-
+            
             // Overall stats — exclude vault so totals match the franchise cards below
             const allReleased    = allMovies.filter(m => !m.vault && new Date(m.release_date) <= today);
             const allTotal       = allReleased.reduce((s, m) => s + (m.runtime || 0), 0);
@@ -2006,7 +2039,7 @@
             const allPct         = allTotal > 0 ? parseFloat(((allWatched / allTotal) * 100).toFixed(1)) : 0;
             const overallCirc    = 2 * Math.PI * 36;
             const overallOffset  = overallCirc - (allPct / 100) * overallCirc;
-
+            
             document.getElementById('hub-overall-stats').innerHTML = `
                 <div class="hub-overall-card">
                     <div class="hub-ring-box">
@@ -2040,7 +2073,7 @@
                     </div>
                 </div>
             `;
-
+            
             // Franchise cards
             const parts = franchises.map(f => {
                 const t      = franchiseThemes[f];
@@ -2050,7 +2083,6 @@
 
                 return `
                 <div class="hub-franchise-card" style="--hfc-rgb:${t.rgb}" onclick="setFranchise('${f}')">
-                    <!-- Progress bar replaces static accent bar -->
                     <div class="hfc-progress-bar-wrap">
                         <div class="hfc-progress-bar-fill"
                              style="width:${s.pct}%; background:linear-gradient(90deg, rgb(${t.rgb}), rgba(${t.rgb},0.5));"></div>
@@ -2106,11 +2138,10 @@
         function renderHubStats(franchises) {
             // Per-franchise stats (vault excluded, matching the cards above)
             const rows = franchises.map(f => ({ f, ...getFranchiseStats(f) }));
-
             // Most-watched franchise by time actually watched
             const top = rows.reduce((best, r) => (r.watched > (best ? best.watched : -1) ? r : best), null);
             const topLabel = (top && top.watched > 0) ? top.f : '—';
-
+            
             const bars = rows.map(r => {
                 const rgb = franchiseThemes[r.f].rgb;
                 return `
@@ -2144,11 +2175,12 @@
             const today = new Date();
 
             let filtered = allMovies.filter(m => m.franchise === currentFranchise);
+            
             // Exclude vault content unless user has enabled vault view
             if (!vaultVisible) {
                 filtered = filtered.filter(m => !m.vault);
             }
-            if (activeCanonTypes.size < 3) {
+            if (activeCanonTypes.size < KNOWN_STATUSES.size) {
                 filtered = filtered.filter(m => activeCanonTypes.has(normaliseStatus(m.continuity_status)));
             }
             
@@ -2166,11 +2198,11 @@
             if (watchedFilter === 'watched')   filtered = filtered.filter(m => m.watched);
             if (watchedFilter === 'unwatched') filtered = filtered.filter(m => !m.watched);
 
-         let displayList = filtered.filter(m => {
-    const rd = new Date(m.release_date);
-    // Strict separation: Upcoming gets future dates, the others get past dates
-    return currentView === 'Upcoming' ? rd > today : rd <= today;
-});
+            let displayList = filtered.filter(m => {
+                const rd = new Date(m.release_date);
+                // Strict separation: Upcoming gets future dates, the others get past dates
+                return currentView === 'Upcoming' ? rd > today : rd <= today;
+            });
             
             if (currentView === 'Chronological') {
                 displayList.sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
@@ -2192,6 +2224,13 @@
                 if (sorters[currentSort]) displayList.sort(sorters[currentSort]);
             }
 
+            const statusNames = {
+                'soft-canon': 'Soft Canon',
+                'multiverse': 'Multiverse',
+                'elseworlds': 'Elseworlds',
+                'non-canon':  'Non-Canon'
+            };
+
             const parts = displayList.map((movie, i) => {
                 const releaseDate   = new Date(movie.release_date);
                 const isUpcoming    = releaseDate > today;
@@ -2210,12 +2249,13 @@
                 }
                 
                 const runtimeDisplay = formatRuntime(movie.runtime);
-                const statusBadge    = status === 'multiverse' ? 'Multiverse' : status === 'non-canon' ? 'Non-Canon' : '';
+                const statusBadge    = statusNames[status] || '';
+                const statusClass    = status !== 'main' ? `is-${status}` : '';
                 const isVault        = movie.vault === true;
-                const delay         = Math.min(i * 40, 600);
+                const delay          = Math.min(i * 40, 600);
                 
                 return `
-                <div id="card-${movie.id}" class="card ${movie.watched ? 'is-watched' : ''} ${status === 'multiverse' ? 'is-multiverse' : ''} ${status === 'non-canon' ? 'is-non-canon' : ''}" style="animation-delay:${delay}ms">
+                <div id="card-${movie.id}" class="card ${movie.watched ? 'is-watched' : ''} ${statusClass}" style="animation-delay:${delay}ms">
                     <div class="card-poster-wrapper">
                         <div class="card-actions">
                             <button class="card-action-btn edit" title="Edit item" onclick="openEditModal(${movie.id})">
@@ -2263,35 +2303,35 @@
            DATA FETCH
         ============================================================ */
         async function fetchAllMovies() {
-    let allData = [];
-    let from = 0;
-    let to = 999;
-    let hasMore = true;
+            let allData = [];
+            let from = 0;
+            let to = 999;
+            let hasMore = true;
+            
+            // Loop to fetch chunks of 1000 to bypass Supabase limits
+            while (hasMore) {
+                const { data, error } = await supabaseClient
+                    .from('movies')
+                    .select('*')
+                    .range(from, to);
+                    
+                if (error) { 
+                    console.error('Fetch error:', error); 
+                    return;
+                }
 
-    // Loop to fetch chunks of 1000 to bypass Supabase limits
-    while (hasMore) {
-        const { data, error } = await supabaseClient
-            .from('movies')
-            .select('*')
-            .range(from, to);
-
-        if (error) { 
-            console.error('Fetch error:', error); 
-            return; 
+                allData = allData.concat(data);
+                
+                // If we got back fewer than 1000 rows, we are at the end
+                if (data.length < 1000) {
+                    hasMore = false;
+                } else {
+                    from += 1000;
+                    to += 1000;
+                }
+            }
+            allMovies = allData;
         }
-
-        allData = allData.concat(data);
-        
-        // If we got back fewer than 1000 rows, we are at the end
-        if (data.length < 1000) {
-            hasMore = false;
-        } else {
-            from += 1000;
-            to += 1000;
-        }
-    }
-    allMovies = allData;
-}
 
         /* ============================================================
            INIT
